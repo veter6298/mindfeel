@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Gift Cases</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&family=Unbounded:wght@600;800&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--ink:#1c0b2e;--plum:#2b1245;--plum2:#3a1b5c;--ribbon:#ff4f8b;--foil:#ffc94d;--mint:#5be3b0;--paper:#fff6ee;--mut:#b9a6d3;--line:rgba(255,246,238,.1);
+--common:#b9a6d3;--rare:#6ab7ff;--epic:#c77dff;--legendary:#ffc94d}
+html,body{margin:0;min-height:100%;background:var(--ink);color:var(--paper);font:500 15px/1.4 Manrope,system-ui,sans-serif}
+body{padding-top:env(safe-area-inset-top,0px)}
+h1,h2,h3,.bal{font-family:Unbounded,system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+#app{max-width:520px;margin:auto;padding:12px 14px 112px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.top h1{font-size:19px;font-weight:800}
+.ib{width:40px;height:40px;border-radius:14px 14px 14px 4px;border:0;background:var(--plum2);color:var(--paper);font-size:17px}
+.hero{position:relative;overflow:hidden;background:var(--plum2);border-radius:26px 26px 26px 6px;padding:20px;margin-bottom:14px}
+.hero:before{content:"";position:absolute;right:44px;top:0;bottom:0;width:26px;background:var(--ribbon);opacity:.9}
+.hero:after{content:"🎀";position:absolute;right:20px;top:-6px;font-size:72px;transform:rotate(12deg);animation:sway 3.5s ease-in-out infinite}
+@keyframes sway{50%{transform:rotate(-6deg) translateY(4px)}}
+.lbl{color:var(--mut);font-size:13px}
+.bal{font-size:40px;font-weight:800;margin:2px 0 14px}.bal i{font-style:normal;color:var(--foil)}
+.btn{border:0;border-radius:16px 16px 16px 5px;padding:14px 18px;font:700 15px Manrope,system-ui;background:var(--ribbon);color:#fff;width:100%}
+.btn.gold{background:var(--foil);color:#2b1245;width:auto}.btn.ghost{background:var(--plum2)}.btn.sm{padding:9px 13px;font-size:13px;width:auto}.btn.red{background:#8a2342}
+.btn:active,.box:active,.gm:active{transform:scale(.96)}.btn:disabled{opacity:.5}
+.btn,.box,.gm{transition:transform .12s}
+h3{font-size:16px;margin:20px 0 10px}
+.banners{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -14px;padding:0 14px}
+.banners::-webkit-scrollbar{display:none}
+.bn{flex:0 0 80%;scroll-snap-align:start;border-radius:20px 20px 20px 5px;padding:16px;background:#5b2a8c;position:relative;overflow:hidden}
+.bn b{display:block;font:800 15px Unbounded,system-ui;margin-bottom:4px}.bn span{font-size:13px;opacity:.9}
+.bn.g{background:#a8741a}.bn.m{background:#127a5c}.bn.p{background:#a3254f}
+.bn:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.16) 50%,transparent 65%);transform:translateX(-100%);animation:shine 5s infinite}
+@keyframes shine{to{transform:translateX(100%)}}
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.box{position:relative;overflow:hidden;background:var(--plum);border:1px solid var(--line);border-bottom:4px solid var(--ac,var(--ribbon));border-radius:22px 22px 8px 22px;padding:16px 14px 14px;min-height:170px;text-align:left;color:inherit;font:inherit;display:flex;flex-direction:column}
+.box:nth-child(even){border-radius:22px 22px 22px 8px}
+.box:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:14px;margin-left:-7px;background:var(--ac,var(--ribbon));opacity:.14}
+.box .ic{font-size:46px;line-height:1;animation:fl 3.2s ease-in-out infinite;position:relative}
+@keyframes fl{50%{transform:translateY(-5px)}}
+.box b{font:800 15px Unbounded,system-ui;margin-top:10px;position:relative}.box small{color:var(--mut);font-size:12px;margin:3px 0 10px;position:relative}
+.box .pr{margin-top:auto;font-weight:700;color:var(--foil);position:relative}
+.gm{display:flex;gap:14px;align-items:center;width:100%;background:var(--plum);border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:12px;color:inherit;font:inherit;text-align:left}
+.gm .ic{font-size:42px}.gm b{display:block;font:800 16px Unbounded,system-ui}.gm small{color:var(--mut)}
+.row{display:flex;align-items:center;gap:12px;background:var(--plum);border-radius:18px;padding:12px;margin-bottom:10px}
+.row .ic{font-size:30px}.row .m{flex:1;min-width:0}.row .m b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.row .m small{color:var(--mut)}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.kv span{color:var(--mut)}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px}
+.chip{flex:none;border:0;border-radius:14px;padding:9px 14px;background:var(--plum);color:var(--mut);font:700 13px Manrope,system-ui}.chip.on{background:var(--ribbon);color:#fff}
+.inp{width:100%;padding:13px;border-radius:14px;border:1px solid var(--line);background:var(--plum);color:var(--paper);font:500 15px Manrope,system-ui;margin:5px 0;outline:none}.inp:focus{border-color:var(--ribbon)}
+.empty{text-align:center;color:var(--mut);padding:36px 10px}.empty .ic{font-size:46px;display:block;margin-bottom:8px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--plum);border-top:1px solid var(--line);display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:20}
+.nav button{flex:1;border:0;background:none;color:var(--mut);font:700 11px Manrope,system-ui;padding:6px 0;border-radius:14px}.nav button span{display:block;font-size:20px}.nav button.on{color:var(--paper);background:var(--plum2)}
+.ov{position:fixed;inset:0;background:rgba(10,3,20,.7);backdrop-filter:blur(6px);display:none;align-items:flex-end;z-index:40}.ov.on{display:flex}
+.sheet{width:100%;max-width:520px;margin:auto;max-height:88vh;overflow:auto;background:var(--plum);border-radius:28px 28px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom,0px));animation:up .25s ease-out;position:relative}
+@keyframes up{from{transform:translateY(60px);opacity:0}}
+.x{position:absolute;right:14px;top:14px}
+.c{text-align:center}.c h2{font-size:20px;margin:10px 0 4px}.c p{color:var(--mut);margin:4px 0 14px}
+.big{font-size:84px;line-height:1.1}.pop{animation:pop .55s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+.tag{display:inline-block;padding:4px 12px;border-radius:99px;background:var(--plum2);font-weight:700;font-size:13px}
+.reel{position:relative;height:96px;overflow:hidden;border-radius:18px;background:var(--ink);margin:16px 0}
+.reel:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1px;background:var(--foil);box-shadow:0 0 12px var(--foil)}
+.strip{display:flex;gap:8px;padding:8px;will-change:transform}
+.cell{flex:0 0 80px;height:80px;border-radius:14px;background:var(--plum);display:grid;place-items:center;font-size:38px}
+.sl{display:flex;gap:8px;justify-content:center;margin:16px 0}.sl .cell{flex:0 0 78px;height:94px;font-size:46px;background:var(--ink)}
+.bets{display:flex;gap:8px;justify-content:center;margin:12px 0}.bets .btn.on{outline:2px solid var(--foil)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cf{position:fixed;top:-14px;width:8px;height:12px;z-index:99;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(108vh) rotate(720deg)}}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--paper);color:var(--ink);padding:11px 16px;border-radius:14px;font-weight:700;opacity:0;transition:.25s;z-index:60;max-width:88vw;text-align:center;pointer-events:none}.toast.on{opacity:1;transform:translate(-50%,0)}
+.sp{width:34px;height:34px;border-radius:50%;border:4px solid var(--plum2);border-top-color:var(--ribbon);animation:rot 1s linear infinite;margin:20px auto}@keyframes rot{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top"><h1>Gift Cases</h1><button class="ib" id="snd" onclick="toggleSnd()">🔊</button></div>
+  <main id="main"></main>
+</div>
+<nav class="nav" id="nav"></nav>
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand();try{tg.setHeaderColor("#1c0b2e");tg.setBackgroundColor("#1c0b2e")}catch{}}
+// Публичный HTTPS-адрес bot.py без слэша в конце. Пусто = тот же домен (когда index.html отдаёт сам bot.py).
+const API_BASE=(new URLSearchParams(location.search).get("api")||"").replace(/\/$/,"");
+const $=s=>document.querySelector(s),E=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const fmt=n=>Number(n||0).toLocaleString("ru-RU");
+const S={view:"home",me:null,cases:[],inv:[],at:"stats",err:null};
+const RN={common:"Обычный",rare:"Редкий",epic:"Эпический",legendary:"Легендарный"};
+
+async function api(path,o={}){
+  if(DEMO)return mock(path,o.body?JSON.parse(o.body):{});
+  if(!API_BASE&&/github\.io$|pages\.dev$|netlify\.app$/.test(location.hostname))throw new Error("API_BASE не настроен: страница на статическом хостинге.");
+  let r;try{r=await fetch(API_BASE+path,{...o,headers:{"Content-Type":"application/json",...(tg?.initData?{"X-Telegram-Init-Data":tg.initData}:{}),...(o.headers||{})}})}
+  catch{throw new Error("Нет связи с сервером. Проверьте адрес API и CORS.")}
+  const t=await r.text();let d=null;try{d=JSON.parse(t)}catch{}
+  if(!d){throw new Error(r.status===405?"Сервер не принимает запрос (405). Проверьте адрес API.":"Ошибка сервера (HTTP "+r.status+")")}
+  if(!r.ok||!d.ok)throw new Error(d.error||d.message||"Ошибка сервера");
+  return d;
+}
+const post=(p,b)=>api(p,{method:"POST",body:JSON.stringify(b||{})});
+const adm=b=>post("/api/admin",b);
+
+/* ---- демо-режим: превью без сервера (вне Telegram и без API_BASE) ---- */
+const DEMO=!tg?.initData&&!API_BASE;
+const DG=[{id:"g1",name:"Мишка",emoji:"🧸",stars:15},{id:"g2",name:"Роза",emoji:"🌹",stars:25},{id:"g3",name:"Торт",emoji:"🎂",stars:50},{id:"g4",name:"Кубок",emoji:"🏆",stars:100,collectible:true},{id:"g5",name:"Кольцо",emoji:"💍",stars:250,collectible:true},{id:"g6",name:"Ракета",emoji:"🚀",stars:500,collectible:true}];
+const DC=[["mini","Мини",25,"🍀","green","Дешёвый кейс для разминки."],["starter","Стартовый",75,"🎁","blue","Базовые подарки."],["premium","Премиум",250,"💎","violet","Редкие награды."],["gold","Золотой",400,"🏆","gold","Редкие и эпические."],["nft","NFT Vault",600,"🪄","gold","Коллекционные подарки."],["mega","MEGA",1200,"👑","red","Максимальная редкость."]].map(([id,name,price,icon,accent,description])=>({id,name,price,icon,accent,description}));
+const DS={bal:1000,n:3,inv:[{id:1,gift_name:"Мишка",star_value:15,collectible:0},{id:2,gift_name:"Торт",star_value:50,collectible:0}],promos:[{code:"WELCOME",amount:100,max_uses:0,uses:3}]};
+const drar=s=>s<30?"common":s<100?"rare":s<300?"epic":"legendary";
+async function mock(p,b){
+  await new Promise(r=>setTimeout(r,250));
+  const ok=d=>({ok:true,...d}),pick=a=>a[Math.random()*a.length|0],take=n=>{if(DS.bal<n)throw new Error("Недостаточно Chat Stars.");DS.bal-=n};
+  const add=g=>DS.inv.unshift({id:DS.n++,gift_name:g.name,star_value:g.stars,collectible:g.collectible?1:0});
+  const tg2=base=>DG.filter(g=>g.stars>base).slice(0,3).map(g=>({gift:g,chance:Math.max(.02,Math.min(.9,.95*base/g.stars))}));
+  switch(p){
+    case"/api/me":return ok({user:{id:1,first_name:"Демо",username:"demo",balance:DS.bal,total_opened:7,total_won:420,is_admin:true}});
+    case"/api/cases":return ok({cases:DC});
+    case"/api/gifts":return ok({gifts:DG});
+    case"/api/inventory":return ok({items:DS.inv});
+    case"/api/open":{take(DC.find(x=>x.id===b.case).price);const g=pick(DG);add(g);return ok({result:{gift:g,rarity:drar(g.stars)},balance:DS.bal})}
+    case"/api/roulette":{take(50);const g=pick(DG);add(g);return ok({result:{gift:g,rarity:drar(g.stars)},balance:DS.bal})}
+    case"/api/slots":{take(b.bet);const r=[0,0,0].map(()=>pick(["🍋","🍒","🔔","💎","7️⃣"])),u=new Set(r).size,pay=u===1?b.bet*8:u===2?b.bet*4/5|0:0;DS.bal+=pay;return ok({result:{reels:r,bet:b.bet,payout:pay},balance:DS.bal})}
+    case"/api/withdraw":DS.inv=DS.inv.filter(x=>x.id!==b.item_id);return ok({message:"Демо: подарок отправлен."});
+    case"/api/upgrade_options":{const it=DS.inv.find(x=>x.id===b.item_id);return ok({item:it,options:tg2(it.star_value)})}
+    case"/api/upgrade":{const it=DS.inv.find(x=>x.id===b.item_id),o=tg2(it.star_value).find(x=>x.gift.id===b.gift_id),w=Math.random()<o.chance;DS.inv=DS.inv.filter(x=>x.id!==b.item_id);if(w)add(o.gift);return ok({result:{won:w,gift:o.gift,chance:o.chance}})}
+    case"/api/promo":if(String(b.code).trim().toUpperCase()!=="WELCOME")throw new Error("Промокод не найден.");DS.bal+=100;return ok({amount:100,balance:DS.bal});
+    case"/api/donate":return ok({sent:true});
+    case"/api/admin":switch(b.action){
+      case"stats":return ok({stats:{users:128,new_24h:9,balance_sum:164300,opened:2310,items_active:540,items_withdrawn:87,slots_spins:1904,slots_net:-1250,upgrades:312,banned:2,top:[{first_name:"Алекс",balance:9100},{first_name:"Мария",balance:7400},{first_name:"Demo",balance:DS.bal}]}});
+      case"user":return ok({user:{user_id:1,first_name:"Демо",username:"demo",balance:DS.bal,total_opened:7,items:DS.inv.length,banned:false}});
+      case"promo_list":return ok({promos:DS.promos});
+      case"txs":return ok({txs:[{user_id:1,kind:"case_open",item:"Торт",amount:-75},{user_id:1,kind:"slots",item:"🍒🍒🍋",amount:-5},{user_id:2,kind:"topup",item:"charge",amount:275}]});
+      case"balance":return ok({balance:DS.bal});
+      default:return ok({message:"Демо: действие выполнено"});
+    }
+  }
+  throw new Error("Демо: нет такого запроса");
+}
+
+/* ---- звук ---- */
+let muted=false,AC;try{muted=localStorage.getItem("mute")==="1"}catch{}
+function beep(f,d=.08,t="sine",v=.12,dl=0){if(muted)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),s=AC.currentTime+dl;o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(AC.destination);o.start(s);o.stop(s+d+.02)}catch{}}
+const sfx={tick:()=>beep(900,.03,"square",.04),click:()=>beep(520,.05,"triangle"),err:()=>beep(160,.25,"sawtooth",.1),
+lose:()=>[300,220,160].forEach((f,i)=>beep(f,.15,"sawtooth",.08,i*.1)),
+win:r=>[523,659,784,1047,1319].slice(0,({common:2,rare:3,epic:4,legendary:5})[r]||2).forEach((f,i)=>beep(f,.2,"triangle",.14,i*.09))};
+function toggleSnd(){muted=!muted;try{localStorage.setItem("mute",muted?"1":"0")}catch{}$("#snd").textContent=muted?"🔇":"🔊";sfx.click()}
+$("#snd").textContent=muted?"🔇":"🔊";
+document.addEventListener("click",e=>{if(e.target.closest(".btn,.box,.gm,.bn,.chip,.nav button"))sfx.click()},true);
+
+/* ---- общие ---- */
+function toast(s){const t=$("#toast");t.textContent=s;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),2400)}
+function sheet(h){$("#sheet").innerHTML=`<button class="ib x" onclick="closeSheet()">✕</button>`+h;$("#ov").classList.add("on")}
+function closeSheet(){$("#ov").classList.remove("on")}
+$("#ov").addEventListener("click",e=>{if(e.target.id==="ov")closeSheet()});
+const setBal=v=>{S.me.balance=v;const b=$("#bal");if(b)b.innerHTML=fmt(v)+" <i>★</i>"};
+const spin=t=>`<div class="c"><div class="sp"></div><p>${t}</p></div>`;
+function confetti(n=45){const cs=["#ffc94d","#ff4f8b","#c77dff","#5be3b0","#6ab7ff"];for(let i=0;i<n;i++){const e=document.createElement("i");e.className="cf";e.style.left=Math.random()*100+"vw";e.style.background=cs[i%5];e.style.animationDuration=(1.5+Math.random()*1.5)+"s";e.style.animationDelay=Math.random()*.4+"s";document.body.appendChild(e);setTimeout(()=>e.remove(),3600)}}
+const EM=["🎁","🧸","🌹","🎂","💐","🚀","🏆","💍","💎","🍾","🔥","🦄"];
+function reel(win){return new Promise(res=>{
+  const N=36,W=34;let c="";for(let i=0;i<N;i++)c+=`<div class="cell">${i===W?win:EM[Math.floor(Math.random()*EM.length)]}</div>`;
+  sheet(`<div class="c"><h2>Крутим…</h2><div class="reel"><div class="strip" id="st">${c}</div></div></div>`);
+  const st=$("#st"),w=st.parentElement.clientWidth;st.getBoundingClientRect();
+  st.style.transition="transform 3.8s cubic-bezier(.12,.6,.1,1)";st.style.transform=`translateX(${-(8+W*88+40-w/2)}px)`;
+  const iv=setInterval(sfx.tick,120);setTimeout(()=>{clearInterval(iv);res()},3900)})}
+function won(g,r,btn,after){
+  const col=`var(--${r})`;
+  sheet(`<div class="c"><div class="big pop" style="filter:drop-shadow(0 0 24px ${col})">${g.emoji||"🎁"}</div><span class="tag" style="color:${col}">${RN[r]||"Успех!"}</span><h2>${E(g.name)}</h2><p>${g.stars} ★${g.collectible?" · можно улучшить до коллекционного":""}</p><button class="btn" onclick="closeSheet();${after||"go(S.view)"}">${btn}</button></div>`);
+  sfx.win(r);if(r!=="common")confetti(r==="legendary"?90:45);
+}
+
+/* ---- навигация ---- */
+function nav(){
+  const t=[["home","🏠","Главная"],["games","🎮","Игры"],["inv","🎁","Инвентарь"],["me","👤","Профиль"]];
+  if(S.me?.is_admin)t.push(["admin","⚙️","Админ"]);
+  $("#nav").innerHTML=t.map(([v,i,l])=>`<button class="${S.view===v?"on":""}" onclick="go('${v}')"><span>${i}</span>${l}</button>`).join("");
+}
+async function go(v){S.view=v;nav();const m=$("#main");
+  try{
+    if(v==="inv"){m.innerHTML=spin("Загружаем…");S.inv=(await api("/api/inventory")).items}
+    if(v==="me"){S.me=(await api("/api/me")).user}
+    m.innerHTML=({home:vHome,games:vGames,inv:vInv,me:vMe,admin:vAdmin})[v]();
+    if(v==="admin")admTab(S.at);
+  }catch(e){m.innerHTML=`<div class="empty"><span class="ic">😵</span>${E(e.message)}<br><br><button class="btn sm" onclick="boot()">Повторить</button></div>`}
+}
+
+/* ---- главная ---- */
+function vHome(){return `
+<section class="hero"><div class="lbl">Ваш баланс</div><div class="bal" id="bal">${fmt(S.me.balance)} <i>★</i></div><button class="btn gold" onclick="topup()">Пополнить</button></section>
+<div class="banners">
+ <div class="bn" onclick="topup()"><b>Бонус к пополнению</b><span>250 ★ → +5%, 500 ★ → +10% на баланс</span></div>
+ <div class="bn g" onclick="openCase('mega')"><b>Кейс MEGA</b><span>Самые редкие подарки каталога</span></div>
+ <div class="bn p" onclick="promo()"><b>Есть промокод?</b><span>Введите его и получите ★</span></div>
+ <div class="bn m" onclick="openCase('mini')"><b>Мини за 25 ★</b><span>Дешёвый кейс для разминки</span></div>
+</div>
+<h3>Кейсы</h3>
+<div class="cases">${S.cases.map(c=>`<button class="box" style="--ac:${({blue:"#6ab7ff",violet:"#c77dff",gold:"#ffc94d",red:"#ff4f8b",green:"#5be3b0"})[c.accent]||"#ff4f8b"}" onclick="openCase('${c.id}')"><div class="ic">${c.icon}</div><b>${E(c.name)}</b><small>${E(c.description)}</small><div class="pr">${c.price} ★</div></button>`).join("")}</div>`}
+
+async function openCase(id){
+  const c=S.cases.find(x=>x.id===id);if(!c)return;
+  sheet(`<div class="c"><div class="big">${c.icon}</div><h2>${E(c.name)}</h2><p>${E(c.description)}</p><button class="btn" onclick="buyCase('${id}')">Открыть за ${c.price} ★</button></div>`);
+}
+async function buyCase(id){
+  sheet(spin("Открываем кейс…"));
+  try{const d=await post("/api/open",{case:id});setBal(d.balance);await reel(d.result.gift.emoji||"🎁");won(d.result.gift,d.result.rarity,"Забрать")}
+  catch(e){sfx.err();sheet(`<div class="c"><h2>Не получилось</h2><p>${E(e.message)}</p><button class="btn ghost" onclick="closeSheet()">Закрыть</button></div>`)}
+}
+
+/* ---- игры ---- */
+const vGames=()=>`
+<button class="gm" onclick="openSlots()"><span class="ic">🎰</span><span><b>Слоты</b><small>Ставки 10–100 ★, тройка до ×100</small></span></button>
+<button class="gm" onclick="roulette()"><span class="ic">🎡</span><span><b>Рулетка</b><small>50 ★ за попытку, подарок гарантирован</small></span></button>
+<button class="gm" onclick="go('inv');toast('Нажмите ⚡ у подарка')"><span class="ic">⚡</span><span><b>Апгрейдер</b><small>Рискните подарком ради более дорогого</small></span></button>`;
+function roulette(){sheet(`<div class="c"><div class="big">🎡</div><h2>Рулетка</h2><p>50 ★ за попытку</p><button class="btn" onclick="spinRoulette()">Крутить</button></div>`)}
+async function spinRoulette(){
+  sheet(spin("Колесо вращается…"));
+  try{const d=await post("/api/roulette");setBal(d.balance);await reel(d.result.gift.emoji||"🎁");won(d.result.gift,d.result.rarity,"Отлично")}
+  catch(e){sfx.err();closeSheet();toast(e.message)}
+}
+const SYM=["🍋","🍒","🔔","💎","7️⃣"];let bet=25;
+function openSlots(){
+  sheet(`<div class="c"><h2>Слоты</h2><div class="sl">${[0,1,2].map(()=>'<div class="cell s">🍋</div>').join("")}</div><p id="sm">Пара возвращает 0.8 ставки</p>
+  <div class="bets">${[10,25,50,100].map(b=>`<button class="btn sm ghost" id="b${b}" onclick="setBet(${b})">${b} ★</button>`).join("")}</div><button class="btn" id="sb" onclick="spinSlots()">Крутить</button></div>`);setBet(bet);
+}
+function setBet(b){bet=b;[10,25,50,100].forEach(x=>{const e=$("#b"+x);if(e)e.classList.toggle("on",x===b)})}
+async function spinSlots(){
+  const bt=$("#sb"),m=$("#sm"),cs=[...document.querySelectorAll(".s")];bt.disabled=true;
+  const iv=cs.map((c,i)=>setInterval(()=>{c.textContent=SYM[Math.random()*5|0];if(!i)sfx.tick()},80));let d;
+  try{d=await post("/api/slots",{bet})}catch(e){iv.forEach(clearInterval);sfx.err();m.textContent=e.message;bt.disabled=false;return}
+  for(let i=0;i<3;i++){await new Promise(r=>setTimeout(r,450+i*450));clearInterval(iv[i]);cs[i].textContent=d.result.reels[i];cs[i].classList.remove("pop");void cs[i].offsetWidth;cs[i].classList.add("pop");sfx.click()}
+  setBal(d.balance);const p=d.result.payout;
+  if(p>bet){m.textContent="Выигрыш +"+(p-bet)+" ★";sfx.win("epic");confetti(p>=bet*20?90:50)}else if(p>0){m.textContent="Возврат "+p+" ★";sfx.win("common")}else{m.textContent="Не повезло, попробуйте ещё";sfx.lose()}
+  bt.disabled=false;
+}
+
+/* ---- инвентарь и апгрейдер ---- */
+const vInv=()=>S.inv.length?S.inv.map(x=>`<div class="row"><span class="ic">🎁</span><div class="m"><b>${E(x.gift_name)}</b><small>${x.star_value} ★${x.collectible?" · коллекционный":""}</small></div><button class="btn sm ghost" onclick="upg(${x.id})">⚡</button><button class="btn sm" onclick="withdraw(${x.id})">Вывести</button></div>`).join(""):`<div class="empty"><span class="ic">📭</span>Здесь пусто. Откройте первый кейс на главной.</div>`;
+async function withdraw(id){
+  if(!confirm("Отправить подарок на ваш Telegram-аккаунт?"))return;
+  try{toast((await post("/api/withdraw",{item_id:id})).message);go("inv")}catch(e){toast(e.message)}
+}
+async function upg(id){
+  sheet(spin("Ищем цели…"));
+  try{const d=await post("/api/upgrade_options",{item_id:id});
+    sheet(`<div class="c"><h2>Апгрейдер</h2><p>${E(d.item.gift_name)} · ${d.item.star_value} ★. При неудаче подарок сгорает.</p></div>`+(d.options.length?d.options.map(o=>`<div class="row"><span class="ic">${o.gift.emoji||"🎁"}</span><div class="m"><b>${E(o.gift.name)}</b><small>${o.gift.stars} ★ · шанс ${(o.chance*100).toFixed(1)}%</small></div><button class="btn sm" onclick="doUpg(${id},'${E(o.gift.id)}')">Рискнуть</button></div>`).join(""):'<div class="empty">Нет доступных целей</div>'));
+  }catch(e){closeSheet();toast(e.message)}
+}
+async function doUpg(id,gid){
+  sheet(spin("Апгрейд…"));
+  try{const d=await post("/api/upgrade",{item_id:id,gift_id:gid});
+    await new Promise(r=>{let n=0;const iv=setInterval(()=>{sfx.tick();if(++n>14){clearInterval(iv);r()}},120)});
+    if(d.result.won)won(d.result.gift,"legendary","Забрать","go('inv')");
+    else{sheet(`<div class="c"><div class="big pop">💥</div><h2>Не вышло</h2><p>Подарок сгорел</p><button class="btn ghost" onclick="closeSheet();go('inv')">Закрыть</button></div>`);sfx.lose()}
+  }catch(e){sfx.err();closeSheet();toast(e.message)}
+}
+
+/* ---- профиль, пополнение, промокод ---- */
+const vMe=()=>{const u=S.me;return `
+<div class="row" style="padding:16px"><span class="ic" style="font-size:40px">🙂</span><div class="m"><b>${E(u.first_name||"Игрок")}</b><small>@${E(u.username||"user")}</small></div></div>
+<div class="kv"><span>Баланс</span><b>${fmt(u.balance)} ★</b></div><div class="kv"><span>Открыто кейсов</span><b>${fmt(u.total_opened)}</b></div><div class="kv"><span>Стоимость выигрышей</span><b>${fmt(u.total_won)} ★</b></div>
+<div class="grid2" style="margin-top:16px"><button class="btn" onclick="topup()">Пополнить</button><button class="btn ghost" onclick="promo()">Промокод</button></div>`};
+function topup(){
+  const b={250:"+5%",500:"+10%"};
+  sheet(`<div class="c"><h2>Пополнение</h2><p>Оплата Telegram Stars</p></div><div class="grid2">${[10,25,50,100,250,500].map(x=>`<button class="box" style="min-height:96px;--ac:#ffc94d" onclick="pay(${x})"><b>⭐ ${x}</b><small>${b[x]?"Бонус "+b[x]:"&nbsp;"}</small></button>`).join("")}</div>`);
+}
+async function pay(a){
+  try{const d=await post("/api/donate",{amount:a});
+    if(d.invoice?.url&&tg?.openInvoice)tg.openInvoice(d.invoice.url,s=>{if(s==="paid"){closeSheet();toast("Оплата прошла, баланс пополнен");setTimeout(boot,800)}else if(s==="failed")toast("Оплата не удалась")});
+    else if(d.sent){toast("Счёт отправлен в чат с ботом");closeSheet();setTimeout(()=>tg?.close?.(),600)}
+    else toast("Не удалось открыть счёт")}catch(e){toast(e.message)}
+}
+function promo(){sheet(`<div class="c"><h2>Промокод</h2><input class="inp" id="pi" placeholder="Введите код" autocapitalize="characters"><button class="btn" onclick="redeem()">Активировать</button><p id="pm"></p></div>`)}
+async function redeem(){try{const d=await post("/api/promo",{code:$("#pi").value});setBal(d.balance);sfx.win("epic");confetti(40);$("#pm").textContent="+"+d.amount+" ★ зачислено"}catch(e){sfx.err();$("#pm").textContent=e.message}}
+
+/* ---- админ ---- */
+const AT=[["stats","Статистика"],["users","Игроки"],["bc","Рассылка"],["promos","Промокоды"],["log","Журнал"]];
+const vAdmin=()=>`<div class="chips">${AT.map(([k,l])=>`<button class="chip ${S.at===k?"on":""}" onclick="admTab('${k}',this)">${l}</button>`).join("")}</div><div id="ab"></div>`;
+const kv=(k,v)=>`<div class="kv"><span>${k}</span><b>${v}</b></div>`;
+async function admTab(k,el){
+  S.at=k;if(el){document.querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));el.classList.add("on")}
+  const ab=$("#ab");if(!ab)return;ab.innerHTML=spin("");
+  try{
+    if(k==="stats"){const s=(await adm({action:"stats"})).stats;
+      ab.innerHTML=kv("Игроков",fmt(s.users))+kv("Новых за 24 ч",s.new_24h)+kv("Сумма балансов",fmt(s.balance_sum)+" ★")+kv("Открыто кейсов",fmt(s.opened))+kv("Подарков в инвентарях",s.items_active)+kv("Выведено подарков",s.items_withdrawn)+kv("Спинов слотов",fmt(s.slots_spins))+kv("Слоты, итог игроков",fmt(s.slots_net)+" ★")+kv("Апгрейдов",s.upgrades)+kv("Забанено",s.banned)+`<h3>Топ по балансу</h3>`+s.top.map(u=>kv(E(u.first_name||u.username||u.user_id),fmt(u.balance)+" ★")).join("")}
+    if(k==="users")ab.innerHTML=`<input class="inp" id="uq" placeholder="ID или @username"><button class="btn" onclick="find()">Найти</button><div id="ui"></div>`;
+    if(k==="bc")ab.innerHTML=`<textarea class="inp" id="bt" rows="4" placeholder="Текст рассылки (можно <b> и <i>)"></textarea><button class="btn" onclick="bcast()">Отправить всем</button><h3>Раздать всем ★</h3><input class="inp" id="ga" type="number" placeholder="Сумма"><button class="btn ghost" onclick="giveAll()">Начислить всем</button>`;
+    if(k==="promos"){const p=(await adm({action:"promo_list"})).promos;
+      ab.innerHTML=`<input class="inp" id="pc" placeholder="Код"><div class="grid2"><input class="inp" id="pa" type="number" placeholder="Сумма ★"><input class="inp" id="pl" type="number" placeholder="Лимит (0 = ∞)"></div><button class="btn" onclick="newPromo()">Создать</button><h3>Активные</h3>`+(p.map(x=>`<div class="row"><div class="m"><b>${E(x.code)}</b><small>${x.amount} ★ · ${x.uses}/${x.max_uses||"∞"}</small></div><button class="btn sm red" onclick="delPromo('${E(x.code)}')">✕</button></div>`).join("")||'<div class="empty">Промокодов нет</div>')}
+    if(k==="log"){const t=(await adm({action:"txs"})).txs;
+      ab.innerHTML=t.map(x=>kv(`#${x.user_id} · ${E(x.kind)}${x.item?" · "+E(String(x.item).slice(0,14)):""}`,(x.amount>0?"+":"")+x.amount)).join("")||'<div class="empty">Пусто</div>'}
+  }catch(e){ab.innerHTML=`<div class="empty">${E(e.message)}</div>`}
+}
+async function find(q){
+  try{const u=(await adm({action:"user",query:q||$("#uq").value})).user,g=(await api("/api/gifts")).gifts;
+    $("#ui").innerHTML=`<div style="margin-top:12px">${kv("ID",u.user_id)}${kv("Имя",E(u.first_name||"—"))}${kv("Username","@"+E(u.username||"—"))}${kv("Баланс",fmt(u.balance)+" ★")}${kv("Кейсов",u.total_opened)}${kv("Подарков",u.items)}${kv("Статус",u.banned?"🚫 забанен":"активен")}</div>
+    <input class="inp" id="bv" type="number" placeholder="Сумма"><div class="grid2"><button class="btn sm" onclick="bal(${u.user_id},'add')">Добавить</button><button class="btn sm ghost" onclick="bal(${u.user_id},'set')">Установить</button></div>
+    <select class="inp" id="gs">${g.map(x=>`<option value="${E(x.id)}">${x.emoji} ${E(x.name)} · ${x.stars}★</option>`).join("")}</select>
+    <div class="grid2"><button class="btn sm ghost" onclick="gift(${u.user_id})">Выдать подарок</button><button class="btn sm red" onclick="ban(${u.user_id},${!u.banned})">${u.banned?"Разбанить":"Забанить"}</button></div>`;
+  }catch(e){toast(e.message)}
+}
+const act=async(b,ok,re)=>{try{const d=await adm(b);toast(ok?ok(d):d.message||"Готово");re&&re()}catch(e){toast(e.message)}};
+const bal=(id,mode)=>act({action:"balance",user_id:id,value:parseInt($("#bv").value||"0"),mode},d=>"Баланс: "+d.balance+" ★",()=>find(String(id)));
+const ban=(id,banned)=>act({action:"ban",user_id:id,banned},()=>banned?"Забанен":"Разбанен",()=>find(String(id)));
+const gift=id=>act({action:"give_gift",user_id:id,gift_id:$("#gs").value});
+const bcast=()=>confirm("Отправить всем пользователям?")&&act({action:"broadcast",text:$("#bt").value});
+const giveAll=()=>{const n=parseInt($("#ga").value||"0");n&&confirm("Начислить всем "+n+" ★?")&&act({action:"give_all",amount:n})};
+const newPromo=()=>act({action:"promo_create",code:$("#pc").value,amount:parseInt($("#pa").value||"0"),max_uses:parseInt($("#pl").value||"0")},null,()=>admTab("promos"));
+const delPromo=c=>act({action:"promo_delete",code:c},null,()=>admTab("promos"));
+
+/* ---- старт ---- */
+async function boot(){
+  if(DEMO&&!$(".top .tag"))$(".top h1").insertAdjacentHTML("afterend",'<span class="tag">демо</span>');
+  $("#main").innerHTML=spin("Загружаем…");
+  try{const[me,cs]=await Promise.all([api("/api/me"),api("/api/cases")]);S.me=me.user;S.cases=cs.cases;go(S.view==="admin"&&!S.me.is_admin?"home":S.view)}
+  catch(e){$("#main").innerHTML=`<div class="empty"><span class="ic">😵</span>${E(e.message)}<br><br><button class="btn sm" onclick="boot()">Повторить</button></div>`}
+}
+boot();
+</script>
+</body>
+</html>
