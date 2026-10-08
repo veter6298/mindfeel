@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Gift Cases</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{
+  --bg:#070811;--panel:#101321;--panel2:#151a2c;--text:#f5f7ff;--muted:#8f96ad;
+  --line:rgba(255,255,255,.08);--blue:#6c7cff;--violet:#a56cff;--gold:#ffcf66;
+  --green:#49df9a;--red:#ff5d7d;--shadow:0 18px 60px rgba(0,0,0,.38)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:
+ radial-gradient(circle at 15% 0%,rgba(108,124,255,.20),transparent 32%),
+ radial-gradient(circle at 90% 12%,rgba(165,108,255,.16),transparent 28%),var(--bg);
+ color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button{font:inherit;color:inherit;border:0}
+.app{max-width:760px;margin:auto;padding:16px 16px 100px}
+.top{display:flex;justify-content:space-between;align-items:center;margin:4px 0 18px}
+.brand{font-weight:900;letter-spacing:.5px;font-size:22px}.brand span{color:var(--blue)}
+.avatar{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,#6677ff,#b26cff);display:grid;place-items:center;font-weight:900;box-shadow:0 8px 30px #0005}
+.balance{padding:20px;border:1px solid var(--line);border-radius:25px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025));box-shadow:var(--shadow);position:relative;overflow:hidden}
+.balance:after{content:"";position:absolute;width:170px;height:170px;border-radius:50%;right:-70px;top:-85px;background:#6c7cff22;filter:blur(4px)}
+.balance small{color:var(--muted)}.balrow{display:flex;justify-content:space-between;align-items:end;margin-top:8px}.bal{font-size:35px;font-weight:950}.star{color:#ffd65b}
+.plus{padding:10px 14px;border-radius:13px;background:#ffffff12;border:1px solid var(--line);cursor:pointer}
+.section{margin-top:24px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section h2{font-size:18px;margin:0}.hint{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:linear-gradient(160deg,#151a2c,#0e1120);border:1px solid var(--line);border-radius:22px;padding:15px;box-shadow:0 10px 35px #0003;cursor:pointer;position:relative;overflow:hidden;transition:.18s}
+.card:active{transform:scale(.98)}.card:before{content:"";position:absolute;inset:0;background:linear-gradient(130deg,#ffffff08,transparent 45%);pointer-events:none}
+.caseicon{font-size:42px;margin:8px 0}.ctitle{font-weight:850;font-size:16px}.desc{font-size:11px;color:var(--muted);min-height:31px;margin:5px 0 12px}.price{display:flex;justify-content:space-between;align-items:center}.price b{font-size:14px}.open{background:linear-gradient(135deg,#6577ff,#9a67ff);padding:9px 12px;border-radius:12px;font-weight:800}
+.feature{grid-column:1/-1;background:linear-gradient(135deg,#1d1731,#11162a);border-color:#a56cff44}.feature .caseicon{font-size:50px}
+.tabs{position:fixed;z-index:20;bottom:0;left:0;right:0;padding:9px 10px calc(9px + env(safe-area-inset-bottom));background:#090b14e8;backdrop-filter:blur(20px);border-top:1px solid var(--line)}
+.tabsin{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.tab{background:transparent;padding:8px 4px;color:var(--muted);border-radius:14px;font-size:11px}.tab.active{color:#fff;background:#ffffff0c}.tab span{display:block;font-size:19px;margin-bottom:2px}
+.modal{position:fixed;inset:0;background:#0009;backdrop-filter:blur(8px);z-index:30;display:none;align-items:end}.modal.show{display:flex}.sheet{width:100%;max-width:760px;margin:auto auto 0;background:#0e1220;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:22px;max-height:88vh;overflow:auto}
+.close{float:right;background:#ffffff10;width:36px;height:36px;border-radius:12px}.result{text-align:center;padding:20px 10px}.giftbig{font-size:82px;filter:drop-shadow(0 10px 30px #6c7cff55)}.rarity{display:inline-block;padding:6px 10px;border-radius:999px;background:#ffffff10;font-size:12px;margin-top:8px}.result h2{margin:10px 0 4px}.action{width:100%;padding:14px;border-radius:15px;background:linear-gradient(135deg,#6577ff,#a56cff);font-weight:850;margin-top:12px}
+.list{display:grid;gap:10px}.item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:17px;background:#ffffff07;border:1px solid var(--line)}.itemicon{font-size:35px}.itemmain{flex:1}.itemname{font-weight:800}.itemmeta{font-size:11px;color:var(--muted)}.mini{padding:9px 11px;border-radius:11px;background:#ffffff10;font-size:12px}
+.toast{position:fixed;z-index:50;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:#171b2b;border:1px solid var(--line);padding:11px 15px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;box-shadow:var(--shadow);font-size:13px}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.spinner{width:40px;height:40px;border:4px solid #ffffff18;border-top-color:#7b82ff;border-radius:50%;animation:spin .7s linear infinite;margin:20px auto}@keyframes spin{to{transform:rotate(360deg)}}
+.roulette{padding:22px;text-align:center;background:linear-gradient(145deg,#19142d,#101522);border-radius:24px;border:1px solid #a56cff35}.wheel{font-size:75px;animation:float 2s ease-in-out infinite}@keyframes float{50%{transform:translateY(-8px) rotate(4deg)}}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,1fr)}.feature{grid-column:auto}.app{padding-bottom:110px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">GIFT <span>CASES</span></div>
+    <div class="avatar" id="avatar">G</div>
+  </div>
+
+  <section class="balance">
+    <small>Ваш баланс</small>
+    <div class="balrow">
+      <div class="bal"><span id="balance">—</span> <span class="star">★</span></div>
+      <button class="plus" onclick="openDonate()">＋ Пополнить</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sectionhead"><h2>🔥 Популярное</h2><span class="hint">выберите кейс</span></div>
+    <div class="grid" id="cases"></div>
+  </section>
+
+  <section class="section">
+    <div class="roulette">
+      <div class="wheel">🎡</div>
+      <h2>Lucky Roulette</h2>
+      <div class="hint">Одна попытка — 50 ★</div>
+      <button class="action" onclick="spinRoulette()">КРУТИТЬ РУЛЕТКУ</button>
+    </div>
+  </section>
+
+  <section class="section" id="inventorySection" style="display:none">
+    <div class="sectionhead"><h2>📦 Инвентарь</h2><span class="hint">ваши подарки</span></div>
+    <div class="list" id="inventory"></div>
+  </section>
+</div>
+
+<div class="tabs">
+  <div class="tabsin">
+    <button class="tab active" onclick="goHome(this)"><span>⌂</span>Главная</button>
+    <button class="tab" onclick="showInventory(this)"><span>🎁</span>Инвентарь</button>
+    <button class="tab" onclick="openDonate();setActive(this)"><span>★</span>Stars</button>
+    <button class="tab" onclick="showProfile(this)"><span>♙</span>Профиль</button>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <button class="close" onclick="closeModal()">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+const API_BASE = ""; // Если HTML и API на разных доменах — укажите URL API здесь.
+const headers = () => {
+  const h = {"Content-Type":"application/json"};
+  if (tg?.initData) h["X-Telegram-Init-Data"] = tg.initData;
+  return h;
+};
+
+let state = {balance:0,cases:[],inventory:[]};
+
+async function api(path, options={}) {
+  const r = await fetch(API_BASE + path, {...options, headers:{...headers(),...(options.headers||{})}});
+  const text = await r.text();
+  let data; try { data=JSON.parse(text); } catch { throw new Error(text || "Server error"); }
+  if (!r.ok || !data.ok) throw new Error(data.error || data.message || "Ошибка сервера");
+  return data;
+}
+
+function toast(s) {
+  const el=document.getElementById("toast"); el.textContent=s; el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),2300);
+}
+function openModal(html){document.getElementById("modalContent").innerHTML=html;document.getElementById("modal").classList.add("show")}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function setActive(el){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));el.classList.add("active")}
+
+function renderCases(){
+  const box=document.getElementById("cases");
+  box.innerHTML=state.cases.map((c,i)=>`
+    <div class="card ${i===2?'feature':''}" onclick="openCase('${c.id}')">
+      <div class="caseicon">${c.icon}</div>
+      <div class="ctitle">${escapeHtml(c.name)}</div>
+      <div class="desc">${escapeHtml(c.description)}</div>
+      <div class="price"><b>${c.price} ★</b><span class="open">Открыть</span></div>
+    </div>`).join("");
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+async function load(){
+  try{
+    const [me,cases,inv]=await Promise.all([api("/api/me"),api("/api/cases"),api("/api/inventory")]);
+    state.balance=me.user.balance;state.cases=cases.cases;state.inventory=inv.items;
+    document.getElementById("balance").textContent=state.balance.toLocaleString("ru-RU");
+    document.getElementById("avatar").textContent=(me.user.first_name||"G").slice(0,1).toUpperCase();
+    renderCases();
+  }catch(e){
+    toast(e.message);
+    // Demo visual fallback keeps the Mini App attractive even before backend config.
+    if (!state.cases.length) {
+      state.cases=[
+        {id:"starter",name:"Стартовый",price:75,icon:"🎁",description:"Базовые подарки"},
+        {id:"premium",name:"Премиум",price:250,icon:"💎",description:"Редкие награды"},
+        {id:"nft",name:"NFT Vault",price:600,icon:"🪄",description:"Коллекционные подарки"},
+        {id:"mega",name:"MEGA",price:1200,icon:"👑",description:"Максимальная редкость"}
+      ]; state.balance=1000; document.getElementById("balance").textContent="1 000"; renderCases();
+    }
+  }
+}
+
+async function openCase(id){
+  const c=state.cases.find(x=>x.id===id);
+  openModal(`<div class="result"><div class="giftbig">🎁</div><h2>${escapeHtml(c.name)}</h2><p class="hint">${c.price} ★ будет списано с баланса</p><button class="action" onclick="confirmOpen('${id}')">ОТКРЫТЬ ЗА ${c.price} ★</button></div>`);
+}
+async function confirmOpen(id){
+  document.getElementById("modalContent").innerHTML='<div class="result"><div class="spinner"></div><p>Открываем кейс…</p></div>';
+  try{
+    const d=await api("/api/open",{method:"POST",body:JSON.stringify({case:id})});
+    state.balance=d.balance;document.getElementById("balance").textContent=state.balance.toLocaleString("ru-RU");
+    const g=d.result.gift,r=d.result.rarity;
+    document.getElementById("modalContent").innerHTML=`
+      <div class="result">
+        <div class="giftbig">${g.emoji||"🎁"}</div>
+        <span class="rarity">${rarityName(r)}</span>
+        <h2>${escapeHtml(g.name)}</h2>
+        <p class="hint">${g.stars} ★ · ${g.collectible?"✨ доступен коллекционный апгрейд":"обычный подарок"}</p>
+        <button class="action" onclick="closeModal();load()">ЗАБРАТЬ</button>
+      </div>`;
+  }catch(e){document.getElementById("modalContent").innerHTML=`<div class="result"><h2>Не получилось</h2><p class="hint">${escapeHtml(e.message)}</p><button class="action" onclick="closeModal()">Закрыть</button></div>`}
+}
+function rarityName(r){return ({common:"Обычный",rare:"Редкий",epic:"Эпический",legendary:"Легендарный"})[r]||r}
+
+async function spinRoulette(){
+  openModal('<div class="result"><div class="giftbig">🎡</div><h2>Lucky Roulette</h2><p class="hint">50 ★ за попытку</p><button class="action" onclick="confirmRoulette()">КРУТИТЬ</button></div>');
+}
+async function confirmRoulette(){
+  document.getElementById("modalContent").innerHTML='<div class="result"><div class="spinner"></div><p>Колесо вращается…</p></div>';
+  try{
+    const d=await api("/api/roulette",{method:"POST",body:"{}"});
+    state.balance=d.balance;document.getElementById("balance").textContent=state.balance.toLocaleString("ru-RU");
+    const g=d.result.gift;
+    document.getElementById("modalContent").innerHTML=`<div class="result"><div class="giftbig">${g.emoji||"🎁"}</div><span class="rarity">${rarityName(d.result.rarity)}</span><h2>${escapeHtml(g.name)}</h2><p class="hint">${g.stars} ★</p><button class="action" onclick="closeModal();load()">Отлично</button></div>`;
+  }catch(e){toast(e.message);closeModal()}
+}
+
+async function showInventory(tab){
+  setActive(tab);document.getElementById("inventorySection").style.display="block";
+  document.querySelector(".roulette").parentElement.style.display="none";
+  try{
+    const d=await api("/api/inventory");state.inventory=d.items;
+    document.getElementById("inventory").innerHTML=state.inventory.length?state.inventory.map(x=>`
+      <div class="item"><div class="itemicon">🎁</div><div class="itemmain"><div class="itemname">${escapeHtml(x.gift_name)}</div><div class="itemmeta">${x.star_value} ★ ${x.collectible?"· ✨ collectible":""}</div></div><button class="mini" onclick="withdraw(${x.id})">Вывести</button></div>`).join(""):'<div class="hint">Инвентарь пуст. Откройте первый кейс!</div>';
+  }catch(e){toast(e.message)}
+}
+function goHome(tab){setActive(tab);document.getElementById("inventorySection").style.display="none";document.querySelector(".roulette").parentElement.style.display="block"}
+async function withdraw(id){
+  if(!confirm("Отправить подарок на ваш Telegram-аккаунт?"))return;
+  try{const d=await api("/api/withdraw",{method:"POST",body:JSON.stringify({item_id:id})});toast(d.message);showInventory(document.querySelectorAll(".tab")[1])}
+  catch(e){toast(e.message)}
+}
+function openDonate(){
+  openModal(`<div><h2>⭐ Пополнение / донат</h2><p class="hint">Выберите сумму Stars. Метод sendInvoice должен быть доступен на вашем приватном Bot API.</p>
+  <div class="grid">${[10,25,50,100,250,500].map(x=>`<button class="card" onclick="donate(${x})"><div class="caseicon">⭐</div><div class="ctitle">${x} Stars</div></button>`).join("")}</div></div>`);
+}
+async function donate(amount){
+  try{
+    const d=await api("/api/donate",{method:"POST",body:JSON.stringify({amount})});
+    if(tg?.openInvoice && d.invoice?.url) tg.openInvoice(d.invoice.url,()=>{load()});
+    else toast("Инвойс создан.");
+  }catch(e){toast(e.message)}
+}
+async function showProfile(tab){
+  setActive(tab);
+  try{
+    const d=await api("/api/me"),u=d.user;
+    openModal(`<div class="result"><div class="avatar" style="margin:auto;width:64px;height:64px;font-size:25px">${(u.first_name||"G").slice(0,1)}</div><h2>${escapeHtml(u.first_name||"Игрок")}</h2><p class="hint">@${escapeHtml(u.username||"user")}</p><div class="list"><div class="item"><div class="itemmain"><div class="itemname">Баланс</div><div class="itemmeta">внутренние Chat Stars</div></div><b>${u.balance} ★</b></div><div class="item"><div class="itemmain"><div class="itemname">Открыто кейсов</div></div><b>${u.total_opened}</b></div><div class="item"><div class="itemmain"><div class="itemname">Общая стоимость выигрышей</div></div><b>${u.total_won} ★</b></div></div></div>`);
+  }catch(e){toast(e.message)}
+}
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+load();
+</script>
+</body>
+</html>
